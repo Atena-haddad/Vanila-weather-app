@@ -22,7 +22,8 @@ function formatDate(timestemp){
 }
 
 
-function displayForecast(){
+function displayForecast(response){
+  console.log(response.data.daily);
   let forecastElement=document.querySelector("#forecast");
   let forecastHTML=`<div class="row">`;
   let days=["Thu","Fri","Sat","Sun"];
@@ -45,6 +46,14 @@ function displayForecast(){
   forecastHTML=forecastHTML+`</div>`;
   forecastElement.innerHTML=forecastHTML;
 }
+function getForecast(coordinates){
+  let apiKey="a0c924feao2c9e30bt4b9f31c1337af3";
+  let apiUrl=`https://api.shecodes.io/weather/v1/forecast?lon=${coordinates.lon}&lat=${coordinates.lat}&key=${apiKey}`;
+  console.log(apiUrl);
+  axios.get(apiUrl).then(displayForecast);
+
+}
+
 function displayTemperature(response){
   let temperatureElement=document.querySelector("#temperature");
   let cityElement=document.querySelector("#city");
@@ -66,6 +75,8 @@ function displayTemperature(response){
   iconElement.setAttribute("src",`https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
   );
   iconElement.setAttribute("alt",response.data.weather[0].description);
+
+  getForecast(response.data.coord);
 }
 
 function search(city){
@@ -110,4 +121,3 @@ let celsiusLink=document.querySelector("#celsius-link");
 celsiusLink.addEventListener("click",displayCelsiusTemperature);
 
 search("New York");
-displayForecast();
